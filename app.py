@@ -1,7 +1,7 @@
-import random
-import os
-import time
+import random, os, time
 import customtkinter as ctk
+from modules import hangman as gamef
+from pillow import Image
 
 # set theme configutations
 ctk.set_appearance_mode("System")
@@ -12,17 +12,18 @@ app = ctk.CTk()
 app.geometry("800x600")
 app.iconbitmap("./hangman.ico")
 app.title("Hangman - in python")
+app.resizable(False, False)
 
 
 #------------------------------------- SET THE MAIN WINDOWS WIDGETS -------------------------------------
     
 
 # title
-titleLabel = ctk.CTkLabel(app, text="Hangman - in Python", fg_color="transparent", text_color="white", font=("Arial", 36, "bold"))
+titleLabel = ctk.CTkLabel(master=app, text="Hangman - in Python", fg_color="transparent", text_color="white", font=("Arial", 36, "bold"))
 titleLabel.place(relx=0.5, rely=0.1, anchor=ctk.CENTER)
 
 # how to play
-howToPlayLabel = ctk.CTkLabel(app, text="How To Play", fg_color="transparent", text_color="white", font=("Arial", 20, "bold"))
+howToPlayLabel = ctk.CTkLabel(master=app, text="How To Play", fg_color="transparent", text_color="white", font=("Arial", 20, "bold"))
 howToPlayLabel.place(relx = 0.1, rely=0.25, anchor=ctk.CENTER)
 
 # description text
@@ -39,20 +40,17 @@ Hangman is a classic word-guessing game. Here are the basic rules:
 """
 
 # decription implementation
-htpDescriptionLabel = ctk.CTkLabel(app, text=description_text, fg_color="transparent", text_color="gray", font=("Arial", 14, "bold"), justify="left", anchor=ctk.CENTER, wraplength=750 )
+htpDescriptionLabel = ctk.CTkLabel(master=app, text=description_text, fg_color="transparent", text_color="gray", font=("Arial", 14, "bold"), justify="left", anchor=ctk.CENTER, wraplength=750 )
 htpDescriptionLabel.place(relx = 0.4, rely=0.43, anchor=ctk.CENTER)
 
 
-letsPlayLabel = ctk.CTkLabel(app, text="Let's Play?", fg_color="transparent", text_color="white", font=("Arial", 20, "bold"))
+letsPlayLabel = ctk.CTkLabel(master=app, text="Let's Play?", fg_color="transparent", text_color="white", font=("Arial", 20, "bold"))
 letsPlayLabel.place(relx = 0.1, rely = 0.62, anchor=ctk.CENTER)
 
-# function to debug
-def playGame():
-    print("Play Game -> Clicked")
-
 # start game button
-playButton = ctk.CTkButton(app,command=playGame, hover=True, text="Play Game", border_color="black", border_width=2, fg_color="darkgreen", text_color="white", font=("Arial",30, "bold"), width=100, height= 75, corner_radius=30)
+playButton = ctk.CTkButton(master=app,command=lambda: gamef.playGameButton(app), hover=True, text="Play Game", border_color="black", border_width=2, fg_color="darkgreen", text_color="white", font=("Arial",30, "bold"), width=100, height= 75, corner_radius=30)
 playButton.place(relx = 0.5, rely = 0.80, anchor=ctk.CENTER)
+
 
 app.mainloop()
 

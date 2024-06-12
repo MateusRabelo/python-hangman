@@ -1,8 +1,13 @@
 import customtkinter as ctk
 import random, os, time
+from PIL import Image
 
 # counter of attempts
 attempts = 5
+
+# set PIL image
+imagePath = "./assets/hangman.png"
+image = Image.open(imagePath)
 
 # function to debug
 def playGameButton(app):
@@ -20,23 +25,29 @@ def playGameButton(app):
 # game logical
 def startGame(app):
 
-    # secret word in line
-    wordLabel = ctk.CTkLabel(master=app,text="_ _ _ _ _ _", fg_color="transparent", text_color="#ffffff", font=("Arial", 40, "bold"))
-    wordLabel.place(relx = 0.5, rely = 0.5, anchor=ctk.CENTER)
-
     # attempts count
     global attemptsLabel
     attemptsLabel = ctk.CTkLabel(master=app, text=f"Attempts: {attempts}", fg_color="transparent", text_color="#ffffff", font=("Arial", 20, "bold"))
-    attemptsLabel.place(relx = 0.5, rely = 0.3, anchor=ctk.CENTER)
+    attemptsLabel.place(relx = 0.5, rely = 0.05, anchor=ctk.CENTER)
 
-   # Configurar entrada de texto para aceitar apenas uma letra
-    validation = app.register(validateInput)  # Registrar função de validação
+    # applying the image on the screen
+    global stickImage
+    stickImage = ctk.CTkImage(light_image=image, dark_image=image, size=(300, 300))
+    stickImageLabel = ctk.CTkLabel(master=app, image=stickImage, text="")
+    stickImageLabel.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+
+    # secret word in line
+    wordLabel = ctk.CTkLabel(master=app,text="_ _ _ _ _ _", fg_color="transparent", text_color="#ffffff", font=("Arial", 40, "bold"))
+    wordLabel.place(relx = 0.5, rely = 0.72, anchor=ctk.CENTER)
+
+   # word entry
+    validation = app.register(validateInput)  # register function to validation
     userEntry = ctk.CTkEntry(master=app, placeholder_text="Digite uma letra", validate="key", validatecommand=(validation, "%P"))
-    userEntry.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+    userEntry.place(relx=0.5, rely=0.88, anchor=ctk.CENTER)
 
     # input submit
     entrySubmitButton = ctk.CTkButton(master=app, command=submitButtonClicked)
-    entrySubmitButton.place(relx = 0.5, rely = 0.6, anchor=ctk.CENTER)
+    entrySubmitButton.place(relx = 0.5, rely = 0.95, anchor=ctk.CENTER)
 
 
 # to validate just a letter
@@ -48,15 +59,46 @@ def validateInput(new_value):
 
 
 def submitButtonClicked():
-    global attempts
+    # importing teh global variables
+    global attempts, imagePath, image
     
+    # counting attempts
     if attempts > 0:
         attempts -= 1
         print(f"Tentativas restantes: {attempts}")
         attemptsLabel.configure(text=f"Attempts: {attempts}")
 
-    # else:
-        # EndGame();
+
+    # image selectors
+    if attempts == 4:
+        imagePath = "./assets/hangman-no-left-leg.png"
+        image = Image.open(imagePath)
+        stickImage.configure(light_image=image, dark_image=image)
+
+    if attempts == 3:
+        imagePath = "./assets/hangman-no-legs.png"
+        image = Image.open(imagePath)
+        stickImage.configure(light_image=image, dark_image=image)
+
+    if attempts == 2:
+        imagePath = "./assets/hangman-no-left-arm.png"
+        image = Image.open(imagePath)
+        stickImage.configure(light_image=image, dark_image=image)
+
+    if attempts == 1:
+        imagePath = "./assets/hangman-no-arms.png"
+        image = Image.open(imagePath)
+        stickImage.configure(light_image=image, dark_image=image)
+
+    if attempts == 0:
+        imagePath = "./assets/hangman-death.png"
+        image = Image.open(imagePath)
+        stickImage.configure(light_image=image, dark_image=image)
+
+    
+    
+
+    
 
 
 

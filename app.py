@@ -1,7 +1,6 @@
 import random, os, time
 import customtkinter as ctk
 from modules import hangman as gamef
-from pillow import Image
 
 # set theme configutations
 ctk.set_appearance_mode("System")

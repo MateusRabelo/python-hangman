@@ -51,8 +51,28 @@ pip install -r requirements.txt
 
 Para usar Hangman - in Python, siga estas etapas:
 
+Linux e macOS:
+
+`Abra o aplicativo <app.py>`
+
+ou
+
+`Escreva no Windows Terminal ou Git Bash`
+
+```bash
+python3.exe app.py
 ```
-<exemplo_de_uso>
+
+Windows:
+
+`Abra o aplicativo <app.py>`
+
+ou
+
+`Escreva no Windows Terminal ou Git Bash`
+
+```bash
+python.exe app.py
 ```
 
 Adicione comandos de execução e exemplos que você acha que os usuários acharão úteis. Fornece uma referência de opções para pontos de bônus!

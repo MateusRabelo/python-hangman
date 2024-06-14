@@ -1,4 +1,4 @@
-# Hangman - in Python
+# <img src="./assets/stick/hangman.png"> Hangman - in Python
 
 
 <img src="project-image.png" alt="Imagem de Hangman - in Python">

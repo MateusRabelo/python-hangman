@@ -1,6 +1,8 @@
 import random, os, time
 import customtkinter as ctk
+import tkinter as tk
 from modules import hangman as gamef
+from PIL import Image, ImageTk
 
 # set theme configutations
 ctk.set_appearance_mode("System")
@@ -10,8 +12,14 @@ ctk.set_default_color_theme("blue")
 app = ctk.CTk()
 app.geometry("800x600")
 app.iconbitmap("./hangman.ico")
+# app.wm_iconphoto("./hangman.ico")
 app.title("Hangman - in python")
 app.resizable(False, False)
+
+
+# debug infos
+print(f"TkVersion: {tk.TkVersion}")
+
 
 
 #------------------------------------- SET THE MAIN WINDOWS WIDGETS -------------------------------------

@@ -1,9 +1,9 @@
 import customtkinter as ctk
-import random, os, time
+import random
 from PIL import Image
 
 # list of secret words
-palavras = ["cachorro", "gato", "elefante", "pássaro", "peixe", "leão", "tigre",
+words = ["cachorro", "gato", "elefante", "pássaro", "peixe", "leão", "tigre",
             "girafa", "macaco", "cobra", "lobo", "urso", "rato", "abelha",
             "borboleta", "aranha", "jacaré", "hipopótamo", "rinoceronte",
             "esquilo", "zebra", "tartaruga", "camelo", "papagaio", "coruja", 
@@ -40,8 +40,8 @@ palavras = ["cachorro", "gato", "elefante", "pássaro", "peixe", "leão", "tigre
 #------------------------------------- STARTING BASE VARIABLES OF THE GAME -------------------------------------
 
 # Select a random secret word
-palavra_secreta = "mao" #random.choice(palavras)
-letras_acertadas = set()  # Set of correct letters
+secret_word = "mao" #random.choice(words)
+right_word = set()  # Set of correct letters
 
 # counter of attempts
 attempts = 5
@@ -50,7 +50,7 @@ attempts = 5
 # stickImagePath = "./assets/stick/hangman.png"
 stickImageOpen = Image.open("./assets/stick/hangman.png")
 
-# refreshImagePath = ""
+# refreshImagePath = "" 
 refreshImageOpen = Image.open("./assets/refresh.png")
 
 # nextImagePath = ""
@@ -61,6 +61,7 @@ backImageOpen = Image.open("./assets/back-arrow.png")
 
 # function to debug
 def playGameButton(app):
+    
     global attempts
     attempts = 5
 
@@ -72,13 +73,14 @@ def playGameButton(app):
     startGame(app)
 
 
-# game logic
+
+# initialize game logic
 def startGame(app):
 
-    global attemptsLabel, wordLabel, userEntry, stickImage, letras_acertadas, palavra_secreta
+    global attemptsLabel, wordLabel, userEntry, stickImage, right_word, secret_word
 
     # attempts count
-    attemptsLabel = ctk.CTkLabel(master=app, text=f"Attempts: {attempts}", fg_color="transparent", text_color="#ffffff", font=("Arial", 20, "bold"))
+    attemptsLabel = ctk.CTkLabel(master=app, text=f"Remaining Attempts: {attempts}", fg_color="transparent", text_color="#ffffff", font=("Arial", 20, "bold"))
     attemptsLabel.place(relx = 0.5, rely = 0.05, anchor=ctk.CENTER)
 
     # applying the image on the screen
@@ -87,7 +89,7 @@ def startGame(app):
     stickImageLabel.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
     # display the secret word as underscores
-    display_word = ' '.join(['_' for _ in palavra_secreta])
+    display_word = ' '.join(['_' for _ in secret_word])
     wordLabel = ctk.CTkLabel(master=app, text=display_word, fg_color="transparent", text_color="#ffffff", font=("Arial", 40, "bold"))
     wordLabel.place(relx=0.5,rely=0.72, anchor=ctk.CENTER)
 
@@ -100,40 +102,23 @@ def startGame(app):
     userEntry.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
     # input submit
-    entrySubmitButton = ctk.CTkButton(master=app, command=lambda: submitButtonClicked(app), text="Submit", text_color="white", width=50, height=20)
+    submitButtonImage = ctk.CTkImage(light_image=nextImageOpen, dark_image=nextImageOpen, size=(30,30))
+    entrySubmitButton = ctk.CTkButton(master=app, command=lambda: submitButtonClicked(app), image=submitButtonImage, text="Submit", text_color="white", width=50, height=20)
     entrySubmitButton.place(relx = 0.5, rely = 0.922, anchor=ctk.CENTER)
 
 
-# to validate just a letter
-def validateInput(P):
-    # Verifica se a entrada é vazia ou contém apenas uma letra
-    return P == "" or (len(P) == 1 and P.isalpha())
-
-
-def updateWordLabel():
-    global palavra_secreta, letras_acertadas, wordLabel
-
-    display_word = ""
-    for letra in palavra_secreta:
-        if letra in letras_acertadas:
-            display_word += f"{letra} "
-        else:
-            display_word += "_ "
-    
-    # Update the word label text
-    wordLabel.configure(text=display_word.strip())
-
-
+# response to submit and update all all variables
 def submitButtonClicked(app):
+
     # importing teh global variables
-    global attempts, stickImageOpen, letras_acertadas, palavra_secreta
+    global attempts, stickImageOpen, right_word, secret_word
 
     guessed_letter = userEntry.get().lower()
     print(f'Input do usuário: {guessed_letter}')
 
     # Check if guessed letter is in the secret word
-    if guessed_letter in palavra_secreta:
-        letras_acertadas.add(guessed_letter)
+    if guessed_letter in secret_word:
+        right_word.add(guessed_letter)
 
     # update displayed word
     updateWordLabel()
@@ -142,7 +127,7 @@ def submitButtonClicked(app):
     if attempts > 0:
         attempts -= 1
         print(f"Tentativas restantes: {attempts}")
-        attemptsLabel.configure(text=f"Attempts: {attempts}")
+        attemptsLabel.configure(text=f"Remaining Attempts: {attempts}")
 
     try:
         # Usar after para garantir que a interface gráfica está atualizada
@@ -178,41 +163,67 @@ def submitButtonClicked(app):
 
     stickImage.configure(light_image=stickImageOpen, dark_image=stickImageOpen)
 
-    testePalavraSecreta = set(palavra_secreta)
-    print(f"palavra sercreta: {testePalavraSecreta}\nLetras acertadas: {letras_acertadas}")
+    testePalavraSecreta = set(secret_word)
+    print(f"palavra sercreta: {testePalavraSecreta}\nLetras acertadas: {right_word}")
 
     # Check if the player has won
-    if set(palavra_secreta) == letras_acertadas:
-        print(f"Parabéns, você conseguiu! A palavra secreta é {palavra_secreta}!")
+    if set(secret_word) == right_word:
+        print(f"Parabéns, você conseguiu! A palavra secreta é {secret_word}!")
+
+        wordLabel.configure(text="You Won!")
+        
+        # (after accept to receive functions with lambda to work)
         app.after(2000, lambda: restartGame(app))  # Wait for 2 seconds before restarting the game
         
     # Check if the player has lost
     elif attempts == 0:
-        print("Você perdeu! A palavra secreta era:", palavra_secreta)
-        app.after(2000, lambda: restartGame(app))  # Wait for 2 seconds before restarting the game
+        print("Você perdeu! A palavra secreta era:", secret_word)
+
+        wordLabel.configure(text="You Lose!")
+
+        app.after(2000, lambda: restartGame(app)) 
 
 
+
+# to validate just a letter
+def validateInput(P):
+
+    # verify if the input is empty or have just a letter
+    return P == "" or (len(P) == 1 and P.isalpha())
+
+
+
+def updateWordLabel():
+
+    global secret_word, right_word, wordLabel
+
+    display_word = ""
+    for letter in secret_word:
+        if letter in right_word:
+            display_word += f"{letter} "
+        else:
+            display_word += "_ "
+    
+    # Update the word label text
+    wordLabel.configure(text=display_word.strip())
+
+
+
+# function to reset all variables of the game
 def restartGame(app):
-    global palavra_secreta, letras_acertadas, attempts, stickImage, wordLabel, stickImageOpen
+    global secret_word, right_word, attempts, stickImage, wordLabel, stickImageOpen
 
-    # Reset the hangman image
     stickImageOpen = Image.open("./assets/stick/hangman.png")
     stickImage.configure(light_image=stickImageOpen, dark_image=stickImageOpen)
 
-    # Select a new secret word
-    palavra_secreta = random.choice(palavras)
+    secret_word = random.choice(words)
     
-    # Clear the set of guessed letters
-    letras_acertadas.clear()
+    right_word.clear()
 
-    # Reset attempts
     attempts = 5
 
-    # Update the attempts label
     attemptsLabel.configure(text=f"Attempts: {attempts}")
 
-    # Restart the game interface
-    playGameButton(app)
+    playGameButton(app) # reset the game interface before the update of word
 
-    # Update the word label with new word
     updateWordLabel()

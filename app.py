@@ -1,8 +1,8 @@
-import random, os, time
 import customtkinter as ctk
 import tkinter as tk
 from modules import hangman as gamef
-from PIL import Image, ImageTk
+
+GAMEVERSION = "v1.0.1"
 
 # set theme configutations
 ctk.set_appearance_mode("System")
@@ -17,8 +17,10 @@ app.title("Hangman - in python")
 app.resizable(False, False)
 
 
+
 # debug infos
 print(f"TkVersion: {tk.TkVersion}")
+print(f"gameVersion: {GAMEVERSION}")
 
 
 

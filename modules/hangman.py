@@ -89,7 +89,7 @@ def startGame(app):
     # display the secret word as underscores
     display_word = ' '.join(['_' for _ in palavra_secreta])
     wordLabel = ctk.CTkLabel(master=app, text=display_word, fg_color="transparent", text_color="#ffffff", font=("Arial", 40, "bold"))
-    wordLabel.place(relx=0.5, rely=0.72, anchor=ctk.CENTER)
+    wordLabel.place(relx=0.5,rely=0.72, anchor=ctk.CENTER)
 
    # validation to app.register
     vcmd = (app.register(validateInput), '%P')  # register function to validation
@@ -181,30 +181,23 @@ def submitButtonClicked(app):
     testePalavraSecreta = set(palavra_secreta)
     print(f"palavra sercreta: {testePalavraSecreta}\nLetras acertadas: {letras_acertadas}")
 
-    # # Verificar se o jogo foi ganho
-    # if set(palavra_secreta) == letras_acertadas:
-    #     print(f"Parabéns, você conseguiu! A palavra secreta é {palavra_secreta}!")
-    #     time.sleep(5)
-    #     restartGame(app)
-
-    updateWordLabel()
     # Check if the player has won
     if set(palavra_secreta) == letras_acertadas:
         print(f"Parabéns, você conseguiu! A palavra secreta é {palavra_secreta}!")
-
-        restartGame(app)
+        app.after(2000, lambda: restartGame(app))  # Wait for 2 seconds before restarting the game
         
+    # Check if the player has lost
+    elif attempts == 0:
+        print("Você perdeu! A palavra secreta era:", palavra_secreta)
+        app.after(2000, lambda: restartGame(app))  # Wait for 2 seconds before restarting the game
+
 
 def restartGame(app):
-    global palavra_secreta, letras_acertadas, attempts, stickImage, wordLabel
+    global palavra_secreta, letras_acertadas, attempts, stickImage, wordLabel, stickImageOpen
 
     # Reset the hangman image
     stickImageOpen = Image.open("./assets/stick/hangman.png")
     stickImage.configure(light_image=stickImageOpen, dark_image=stickImageOpen)
-
-    updateWordLabel()
-    
-    app.after(5000)
 
     # Select a new secret word
     palavra_secreta = random.choice(palavras)
@@ -223,11 +216,3 @@ def restartGame(app):
 
     # Update the word label with new word
     updateWordLabel()
-
-
-# to undestand the validations code
-# def as_validate_input(action, index, new_value, old_value, char, validation_type, trigger_type, widget_name):
-#     print(f"Action: {action}, Index: {index}, New Value: {new_value}, Old Value: {old_value}, Char: {char}, Validation Type: {validation_type}, Trigger Type: {trigger_type}, Widget Name: {widget_name}")
-
-# validation codes
-# validatecommand=(vcmd, "%d", "%i", "%P", "%s", "%S", "%v", "%V", "%W")

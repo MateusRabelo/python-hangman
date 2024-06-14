@@ -98,13 +98,13 @@ def startGame(app):
 
     # user word entry
     user_input_var = ctk.StringVar()
-    userEntry = ctk.CTkEntry(master=app, placeholder_text="Digite uma letra", textvariable=user_input_var, validate="key", validatecommand=vcmd, width=30, height=20, justify="center")
-    userEntry.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
+    userEntry = ctk.CTkEntry(master=app, placeholder_text="Digite uma letra", textvariable=user_input_var, validate="key", validatecommand=vcmd, width=50, height=40, justify="center")
+    userEntry.place(relx=0.46, rely=0.88, anchor=ctk.CENTER)
 
     # input submit
     submitButtonImage = ctk.CTkImage(light_image=nextImageOpen, dark_image=nextImageOpen, size=(30,30))
-    entrySubmitButton = ctk.CTkButton(master=app, command=lambda: submitButtonClicked(app), image=submitButtonImage, text="Submit", text_color="white", width=50, height=20)
-    entrySubmitButton.place(relx = 0.5, rely = 0.922, anchor=ctk.CENTER)
+    entrySubmitButton = ctk.CTkButton(master=app, command=lambda: submitButtonClicked(app), image=submitButtonImage, text="", text_color="white", width=50, height=20)
+    entrySubmitButton.place(relx = 0.54, rely = 0.88, anchor=ctk.CENTER)
 
 
 # response to submit and update all all variables
@@ -118,13 +118,18 @@ def submitButtonClicked(app):
 
     # Check if guessed letter is in the secret word
     if guessed_letter in secret_word:
-        right_word.add(guessed_letter)
+        if guessed_letter != "":
+            
+            # add an attempt for any right word
+            attempts += 1
+            right_word.add(guessed_letter)
 
     # update displayed word
     updateWordLabel()
     
     # counting attempts
     if attempts > 0:
+        # remove an attempt for each attempt
         attempts -= 1
         print(f"Tentativas restantes: {attempts}")
         attemptsLabel.configure(text=f"Remaining Attempts: {attempts}")
@@ -184,13 +189,10 @@ def submitButtonClicked(app):
         app.after(2000, lambda: restartGame(app)) 
 
 
-
 # to validate just a letter
 def validateInput(P):
-
     # verify if the input is empty or have just a letter
     return P == "" or (len(P) == 1 and P.isalpha())
-
 
 
 def updateWordLabel():
